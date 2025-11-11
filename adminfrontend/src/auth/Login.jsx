@@ -162,12 +162,7 @@ const Login = () => {
 
 
                <hr className="mb-6 border-t" />
-                   <div className="text-center">
-                                    <a className="inline-block font-semibold text-sm text-green-600 align-baseline hover:text-green-800"
-                                        href="/lupapassword">
-                                       Lupa Password, Klik Disini?
-                                    </a>
-                                </div>
+                 
                                 
 
                 <p className="mt-6 text-xs text-gray-600 text-center">

@@ -8,6 +8,7 @@ import PublicRoute from './PublicRoute';
 import Profil from '../user/account/profil';
 import EmailVertif from '../auth/EmailVertif';
 import Saldo from '../user/saldo/Saldo';
+import Transaksi from '../user/transaksi/Transaksi';
 
 
 
@@ -26,6 +27,7 @@ const Routeer = () => {
   {/* Hanya untuk user yang sudah login */}
   <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>}/>
   <Route path="/saldo" element={<ProtectedRoute><Saldo /></ProtectedRoute>}/>
+  <Route path="/kelolatransaksi" element={<ProtectedRoute><Transaksi /></ProtectedRoute>}/>
   <Route path="/profil" element={<ProtectedRoute><Profil /></ProtectedRoute>}/>
 
 </Routes>

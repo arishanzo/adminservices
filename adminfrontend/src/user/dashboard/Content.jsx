@@ -20,8 +20,8 @@ const Content = () => {
     <div className="p-6 bg-gray-50 min-h-screen space-y-8">
      {/* Header */}
       <header>
-        <h1 className="text-3xl font-bold text-gray-800 mb-2">Kelola Saldo</h1>
-        <p className="text-gray-600">Pantau dan kelola saldo serta transaksi sistem</p>
+        <h1 className="text-3xl font-bold text-gray-800 mb-2">Dashboard</h1>
+        <p className="text-gray-600">Selamat Datang Admin, Di Halaman Dashboard</p>
       </header>
 
       {/* Balance Card */}
