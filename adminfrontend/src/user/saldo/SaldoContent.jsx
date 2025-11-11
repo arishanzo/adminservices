@@ -125,7 +125,7 @@ const [lastSelectedMasuk, setLastSelectedMasuk] = useState(null);
       saldoMasuk.filter((item) =>
         item.sumber.toLowerCase().includes(searchMasuk.toLowerCase())
       ),
-    [searchMasuk]
+    [searchMasuk, saldoMasuk]
   );
 
 
@@ -135,7 +135,7 @@ const [lastSelectedMasuk, setLastSelectedMasuk] = useState(null);
       saldoKeluar.filter((item) =>
         item.tujuan.toLowerCase().includes(searchKeluar.toLowerCase())
       ),
-    [searchKeluar]
+    [searchKeluar, saldoKeluar]
   );
   
 
