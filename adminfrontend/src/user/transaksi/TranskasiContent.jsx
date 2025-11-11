@@ -1,22 +1,44 @@
-import { useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { Search, Filter, Calendar, CheckCircle, Clock, XCircle } from "lucide-react";
+import Pagination from "../components/Pagination";
 
 const TransaksiContent = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filterStatus, setFilterStatus] = useState("Semua");
   const [showFilter, setShowFilter] = useState(false);
+  const [page, setPage] = useState(1);
+  const [paginatedData, setPaginatedData] = useState([]);
 
-  const data = [
+  const data =  useMemo(() => [
     { id: 1, nama: "Budi Santoso", jumlah: 250000, tanggal: "2025-11-10", status: "Menunggu" },
     { id: 2, nama: "Siti Aminah", jumlah: 150000, tanggal: "2025-11-09", status: "Disetujui" },
     { id: 3, nama: "Rizky Ramadhan", jumlah: 300000, tanggal: "2025-11-08", status: "Ditolak" },
-  ];
+      { id: 4, nama: "Budi Santoso", jumlah: 250000, tanggal: "2025-11-10", status: "Menunggu" },
+    { id: 5, nama: "Siti Aminah", jumlah: 150000, tanggal: "2025-11-09", status: "Disetujui" },
+    { id: 6, nama: "Rizky Ramadhan", jumlah: 300000, tanggal: "2025-11-08", status: "Ditolak" },
+  ], []);
 
-  const filteredData = data.filter((item) => {
-    const cocokNama = item.nama.toLowerCase().includes(searchTerm.toLowerCase());
-    const cocokStatus = filterStatus === "Semua" || item.status === filterStatus;
-    return cocokNama && cocokStatus;
-  });
+  const filteredData = useMemo(() => {
+    return data.filter((item) => {
+      const cocokNama = item.nama.toLowerCase().includes(searchTerm.toLowerCase());
+      const cocokStatus = filterStatus === "Semua" || item.status === filterStatus;
+      return cocokNama && cocokStatus;
+    });
+  }, [searchTerm, filterStatus, data]);
+
+    const rowsPerPage = 5;
+
+    useEffect(() => {
+    const startIndex = (page - 1) * rowsPerPage;
+    const endIndex = page * rowsPerPage;
+     
+    const newPageData = filteredData.slice(startIndex, endIndex);
+  
+     setPaginatedData(newPageData);
+     
+     }, [filteredData, page, rowsPerPage]);
+  
+    
 
   return (
     <div className="p-6 bg-gray-50 min-h-screen space-y-8">
@@ -116,8 +138,8 @@ const TransaksiContent = () => {
             </tr>
           </thead>
           <tbody>
-            {filteredData.length > 0 ? (
-              filteredData.map((item) => (
+            {paginatedData.length > 0 ? (
+              paginatedData.map((item) => (
                 <tr key={item.id} className="border-t hover:bg-gray-50 transition">
                   <td className="py-3 px-4">{item.nama}</td>
                   <td className="py-3 px-4">Rp {item.jumlah.toLocaleString()}</td>
@@ -150,6 +172,11 @@ const TransaksiContent = () => {
             )}
           </tbody>
         </table>
+            <Pagination
+          currentPage={page}
+          totalData={filteredData.length}
+          onPageChange={setPage}
+        />
       </div>
     </div>
   );

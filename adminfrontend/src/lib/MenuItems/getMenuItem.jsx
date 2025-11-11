@@ -1,4 +1,4 @@
-import { BookOpen, Coins, Disc, Star, TrendingUp, User, Wallet } from "lucide-react";
+import { BookOpen, Coins, Disc, Star, Ticket, TrendingUp, User, Wallet } from "lucide-react";
 
 const getMenuItems = () => ([
     {
@@ -13,12 +13,18 @@ const getMenuItems = () => ([
     
       {
       path: "/saldo",
-      name: "Saldo",
+      name: "Kelola Saldo",
       icon: (
          <Wallet className="w-5 h-5" />
       )
     },
-    
+      {  
+      path: "/promo",
+      name: "Buat Promo",
+      icon: (
+         <Ticket className="w-5 h-5" />
+      )
+    },
      {
       path: "/kelolatransaksi",
       name: "Kelola Transaksi",
@@ -26,18 +32,12 @@ const getMenuItems = () => ([
       <BookOpen className="w-5 h-5" />
       )
     },
-     {  
-      path: "/laporankeuangan",
-      name: "Promo",
-      icon: (
-         <Disc className="w-5 h-5" />
-      )
-    },
+   
   
    
        {
-       path: "/kelolapengguna",
-      name: "Kelola Pengguna",
+       path: "/pengguna",
+      name: "Daftar Pengguna",
       icon: (
          <User className="w-5 h-5" />
       )
@@ -45,7 +45,7 @@ const getMenuItems = () => ([
 
     
        {
-       path: "/ratingtestimoni",
+       path: "/rating",
       name: "Rating Testimoni",
       icon: (
          <Star className="w-5 h-5" />
