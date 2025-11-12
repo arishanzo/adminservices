@@ -12,6 +12,7 @@ import Transaksi from '../user/transaksi/Transaksi';
 import Promo from '../user/promo/Promo';
 import Pengguna from '../user/pengguna/Pengguna';
 import RatingTestimoni from '../user/rating/RatingTesimoni';
+import LaporanKeuangan from '../user/laporan/LaporanKeuangan';
 
 
 
@@ -34,6 +35,7 @@ const Routeer = () => {
   <Route path='/promo' element={<ProtectedRoute><Promo /></ProtectedRoute>} />
   <Route path='/pengguna' element={<ProtectedRoute><Pengguna /></ProtectedRoute>} />
   <Route path='/rating' element={<ProtectedRoute><RatingTestimoni /></ProtectedRoute>} />
+  <Route path='/laporan' element={<ProtectedRoute><LaporanKeuangan /></ProtectedRoute>} />
 
   <Route path="/profil" element={<ProtectedRoute><Profil /></ProtectedRoute>}/>
 

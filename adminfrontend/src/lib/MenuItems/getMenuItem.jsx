@@ -52,7 +52,7 @@ const getMenuItems = () => ([
       )
     },
        {  
-      path: "/laporankeuangan",
+      path: "/laporan",
       name: "Laporan Keuangan",
       icon: (
          <TrendingUp className="w-5 h-5" />
