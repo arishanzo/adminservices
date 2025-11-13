@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Gateway\ServiceCommunicationController;
 use App\Http\Controllers\PasswordResetController;
+use App\Http\Controllers\saldo\SaldoKeluarController;
+use App\Http\Controllers\saldo\SaldoMasukController;
 use Illuminate\Support\Facades\Auth;
 
 /*
@@ -84,15 +86,8 @@ Route::middleware('auth:sanctum')->group(function () {
         return $request->user()->notifications;
     });
 
+    Route::get('/saldomasuk', [SaldoMasukController::class, 'getAllSaldoMasuk']);
+    Route::get('/saldokeluar', [SaldoKeluarController::class, 'getAllSaldoKeluar']);
+
 });
 
-
-
-
-// // API Gateway Routes (dengan keamanan)
-// Route::prefix('gateway')->middleware(['throttle:100,1', 'service.auth'])->group(function () {
-//     Route::any('{service}/{endpoint?}', [ApiGatewayController::class, 'proxy'])
-//         ->where('endpoint', '.*');
-// });
-
-// Service Communication Routes (dengan keamanan)

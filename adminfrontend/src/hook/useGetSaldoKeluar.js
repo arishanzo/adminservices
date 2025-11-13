@@ -1,37 +1,32 @@
 import { useEffect, useState } from "react";
-import { getDataFileGuru } from "../lib/data/getDataFileGuru";
 import { getFetchCache } from "../lib/fetchCahce/getFetchCache";
+import { getSaldoKeluar } from "../lib/data/saldo/getSaldoKeluar";
 
-export const UseGetFileGuru = (idguru) => {
-
-  const [fileguru, setFileGuru] = useState(null);
+export const UseGetSaldoKeluar = () => {
+  const [saldoKeluar, setSaldoKeluar] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     let isMounted = true;
-    if (!idguru) {
-      setLoading(false);
-      return;
-    }
 
-    const fetchFileGuru = async () => {
+    const fetchSaldoKeluar = async () => {
       try {
 
         setLoading(true);
-        const result = await getFetchCache( () => getDataFileGuru(idguru), 5, 3000);
-        if (isMounted) setFileGuru(result.data || null);
+        const result = await getFetchCache( () => getSaldoKeluar(), 5, 3000);
+        if (isMounted) setSaldoKeluar(result.data || null);
 
       } catch (error) {
 
         if (isMounted) {
           if (error?.response?.status === 404) {
-            setFileGuru(null);
+            setSaldoKeluar(null);
           } else {
             setError(
               error?.response?.data?.message ||
                 error?.message ||
-                "Gagal memuat Data File Guru"
+                "Gagal memuat SaldoKeluar"
             );
           }
         }
@@ -43,14 +38,14 @@ export const UseGetFileGuru = (idguru) => {
     };
 
     const timer = setTimeout(() => {
-      fetchFileGuru();
+      fetchSaldoKeluar();
     }, 100);
 
     return () => {
       isMounted = false;
       clearTimeout(timer);
     };
-  }, [idguru]);
+  }, []);
 
-  return { fileguru, loading, error };
+  return { saldoKeluar, loading, error };
 };

@@ -5,7 +5,6 @@ import Login from '../auth/Login';
 import Dashboard from '../user/dashboard/Dashboard';
 import ProtectedRoute from './ProtectedRoute';
 import PublicRoute from './PublicRoute';
-import Profil from '../user/account/profil';
 import EmailVertif from '../auth/EmailVertif';
 import Saldo from '../user/saldo/Saldo';
 import Transaksi from '../user/transaksi/Transaksi';
@@ -36,8 +35,6 @@ const Routeer = () => {
   <Route path='/pengguna' element={<ProtectedRoute><Pengguna /></ProtectedRoute>} />
   <Route path='/rating' element={<ProtectedRoute><RatingTestimoni /></ProtectedRoute>} />
   <Route path='/laporan' element={<ProtectedRoute><LaporanKeuangan /></ProtectedRoute>} />
-
-  <Route path="/profil" element={<ProtectedRoute><Profil /></ProtectedRoute>}/>
 
 </Routes>
         

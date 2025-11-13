@@ -46,7 +46,7 @@ const SaldoMasuk = ({saldoMasuk, totalMasuk}) => {
  
   const filteredMasuk = useMemo(() => {
     return saldoMasuk.filter((item) => {
-      const date = new Date(item.tanggal);
+      const date = new Date(item.tanggalsaldomasuk);
       return date >= rangeMasuk[0].startDate && date <= rangeMasuk[0].endDate;
     });
   }, [saldoMasuk, rangeMasuk]);
@@ -58,7 +58,7 @@ const SaldoMasuk = ({saldoMasuk, totalMasuk}) => {
   const  cariFilterMasuk = useMemo(
     () =>
       saldoMasuk.filter((item) =>
-        item.sumber.toLowerCase().includes(searchMasuk.toLowerCase())
+        (item.keterangansaldomasuk ?? '').toLowerCase().includes(searchMasuk.toLowerCase())
       ),
     [searchMasuk, saldoMasuk]
   );
@@ -127,18 +127,20 @@ useEffect(() => {
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b text-gray-500">
-              <th className="py-2 text-left">Sumber</th>
+              <th className="py-2 text-left">Nama Kelas</th>
+              <th className="py-2 text-left">Keterangan</th>
               <th className="py-2 text-left">Tanggal</th>
               <th className="py-2 text-right">Jumlah</th>
             </tr>
           </thead>
           <tbody>
             {paginatedMasuk.map((item) => (
-              <tr key={item.id} className="border-b hover:bg-gray-50">
-                <td className="py-2">{item.sumber}</td>
-                <td className="py-2 text-gray-600">{item.tanggal}</td>
+              <tr key={item?.idsaldomasuk} className="border-b hover:bg-gray-50">
+                <td className="py-2">{item?.idbookingprivate}</td>
+                <td className="py-2 text-gray-600">{item?.keterangansaldomasuk}</td>
+                <td className="py-2 text-gray-600">{item?.tglsaldomasuk}</td>
                 <td className="py-2 text-right text-green-600 font-medium">
-                  +Rp {item.jumlah.toLocaleString("id-ID")}
+                  +Rp {(item?.jumlahsaldo ?? '').toLocaleString("id-ID")}
                 </td>
               </tr>
             ))}

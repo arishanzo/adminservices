@@ -15,22 +15,18 @@ return new class extends Migration
     {
         Schema::create('saldokeluar', function (Blueprint $table) {
             $table->ulid('idsaldokeluar')->primary();
-            $table->uuid('idadmin');
             $table->uuid('idguru');
             $table->date('tglsaldokeluar');
             $table->integer('jumlahsaldokeluar');
+            $table->string('keterangansaldokeluar')->nullable();
             $table->timestamps();
 
-            
-            $table->foreign('idadmin', 'fk_idamin_saldokeluar')
-                  ->references('idadmin')->on('adminlogin')
-            ->onDelete('cascade');
 
                 $table->index('idguru', 'index_tb_idguru');
 
         });
 
-                 DB::statement('
+            DB::statement('
             ALTER TABLE `admingopintar_db`.`saldokeluar`
             ADD CONSTRAINT `fk_saldokeluar_idguru`
             FOREIGN KEY (`idguru`)
@@ -52,7 +48,6 @@ return new class extends Migration
 
 
          Schema::table('saldokeluar', function (Blueprint $table) {
-             $table->dropIndex('idx_saldokeluar_idadmin');
                $table->dropIndex('idx_saldokeluar_idguru');
         });
 

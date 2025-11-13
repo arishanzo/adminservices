@@ -37,9 +37,9 @@ const NavbarUser = () => {
 
 
 
-   const markAsDelete = async (iduser) => {
+   const markAsDelete = async (idadmin) => {
     try {
-      await axiosClient.post(`/api/notifications/${iduser}/clear`, {});
+      await axiosClient.post(`/api/notifications/${idadmin}/clear`, {});
       fetchNotifications();
     } catch (err) {
       console.error("Error marking as read:", err);
@@ -184,7 +184,7 @@ useEffect(() => {
                          )}
 
                    <div className="p-4 border-t border-gray-200 space-y-2">
-                          <button onClick={() =>  markAsDelete(user?.iduser)} className="mt-4 w-full inline-flex justify-start bg-white text-base font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm text-start">
+                          <button onClick={() =>  markAsDelete(user?.idadmin)} className="mt-4 w-full inline-flex justify-start bg-white text-base font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm text-start">
                         Clear All
                       </button>
                     </div>

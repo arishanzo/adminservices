@@ -15,15 +15,11 @@ return new class extends Migration
     {
         Schema::create('saldomasuk', function (Blueprint $table) {
             $table->uuid('idsaldomasuk')->primary();
-            $table->uuid('idadmin');
             $table->uuid('idbookingprivate');
             $table->date('tglsaldomasuk');
             $table->integer('jumlahsaldo');
+            $table->string('keterangansaldomasuk')->nullable();
             $table->timestamps();
-
-            $table->foreign('idadmin', 'fk_idamin_saldomasuk')
-                  ->references('idadmin')->on('adminlogin')
-            ->onDelete('cascade');
 
              $table->index('idbookingprivate', 'index_tb_idbookingprivate');
         });
@@ -51,7 +47,6 @@ return new class extends Migration
 
 
          Schema::table('saldomasuk', function (Blueprint $table) {
-             $table->dropIndex('idx_saldomasuk_idadmin');
             $table->dropIndex('idx_saldomasuk_idbookingprivate');
         });
 

@@ -1,36 +1,32 @@
 import { useEffect, useState } from "react";
-import { getProfil } from "../lib/services/profileService";
 import { getFetchCache } from "../lib/fetchCahce/getFetchCache";
+import { getSaldoMasuk } from "../lib/data/saldo/getSaldoMasuk";
 
-export const UseGetProfil = (iduser) => {
-  const [profil, setProfil] = useState(null);
+export const UseGetSaldoMasuk = () => {
+  const [saldoMasuk, setSaldoMasuk] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     let isMounted = true;
-    if (!iduser) {
-      setLoading(false);
-      return;
-    }
 
-    const fetchProfil = async () => {
+    const fetchSaldoMasuk = async () => {
       try {
 
         setLoading(true);
-        const result = await getFetchCache( () => getProfil(iduser), 5, 3000);
-        if (isMounted) setProfil(result.data || null);
+        const result = await getFetchCache( () => getSaldoMasuk(), 5, 3000);
+        if (isMounted) setSaldoMasuk(result.data || null);
 
       } catch (error) {
 
         if (isMounted) {
           if (error?.response?.status === 404) {
-            setProfil(null);
+            setSaldoMasuk(null);
           } else {
             setError(
               error?.response?.data?.message ||
                 error?.message ||
-                "Gagal memuat profil"
+                "Gagal memuat SaldoMasuk"
             );
           }
         }
@@ -42,14 +38,14 @@ export const UseGetProfil = (iduser) => {
     };
 
     const timer = setTimeout(() => {
-      fetchProfil();
+      fetchSaldoMasuk();
     }, 100);
 
     return () => {
       isMounted = false;
       clearTimeout(timer);
     };
-  }, [iduser]);
+  }, []);
 
-  return { profil, loading, error };
+  return { saldoMasuk, loading, error };
 };
