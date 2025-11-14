@@ -65,15 +65,8 @@ Route::get('/hello', function () {
 
 
 Route::prefix('services')->middleware(['throttle:100,1', 'service.auth'])->group(function () {
-
-    Route::get('booking/{idProfilGuru}', [ServiceCommunicationController::class, 'getBookingKelas']);
-    Route::put('bookingupdate/{idBookingPrivate}', [ServiceCommunicationController::class, 'putBookingKelas']);
-
-    
-    Route::put('tglbooking/{idtglbooking}', [ServiceCommunicationController::class, 'putTglBooking']);
-
-    Route::get('gurus', [ServiceCommunicationController::class, 'getAllGurus']);
-    Route::post('cross-data', [ServiceCommunicationController::class, 'crossServiceData']);
+   Route::get('permintaanpenarikan', [ServiceCommunicationController::class, 'getAllPermintaanPenarikan']);
+   Route::post('cross-data', [ServiceCommunicationController::class, 'crossServiceData']);
 });
 
 

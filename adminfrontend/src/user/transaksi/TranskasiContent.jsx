@@ -1,6 +1,8 @@
 import { useEffect, useState, useMemo } from "react";
 import { Search, Filter, Calendar, CheckCircle, Clock, XCircle } from "lucide-react";
 import Pagination from "../components/Pagination";
+import { UseGetPermintaanPenarikan } from "../../hook/useGetPermintaanPenarikan";
+import SkeletonPenarikan from "./SkeletonPenarikan";
 
 const TransaksiContent = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -9,19 +11,15 @@ const TransaksiContent = () => {
   const [page, setPage] = useState(1);
   const [paginatedData, setPaginatedData] = useState([]);
 
-  const data =  useMemo(() => [
-    { id: 1, nama: "Budi Santoso", jumlah: 250000, tanggal: "2025-11-10", status: "Menunggu" },
-    { id: 2, nama: "Siti Aminah", jumlah: 150000, tanggal: "2025-11-09", status: "Disetujui" },
-    { id: 3, nama: "Rizky Ramadhan", jumlah: 300000, tanggal: "2025-11-08", status: "Ditolak" },
-      { id: 4, nama: "Budi Santoso", jumlah: 250000, tanggal: "2025-11-10", status: "Menunggu" },
-    { id: 5, nama: "Siti Aminah", jumlah: 150000, tanggal: "2025-11-09", status: "Disetujui" },
-    { id: 6, nama: "Rizky Ramadhan", jumlah: 300000, tanggal: "2025-11-08", status: "Ditolak" },
-  ], []);
+   const { permintaanPenarikan, loading }   = UseGetPermintaanPenarikan();
+  const data = permintaanPenarikan;
 
+  console.log("Permintaan Penarikan:", permintaanPenarikan);
+  
   const filteredData = useMemo(() => {
-    return data.filter((item) => {
-      const cocokNama = item.nama.toLowerCase().includes(searchTerm.toLowerCase());
-      const cocokStatus = filterStatus === "Semua" || item.status === filterStatus;
+    return data?.filter((item) => {
+      const cocokNama = item?.user__guru.name.toLowerCase().includes(searchTerm.toLowerCase());
+      const cocokStatus = filterStatus === "Semua" || item.statuspermintaan === filterStatus;
       return cocokNama && cocokStatus;
     });
   }, [searchTerm, filterStatus, data]);
@@ -32,12 +30,21 @@ const TransaksiContent = () => {
     const startIndex = (page - 1) * rowsPerPage;
     const endIndex = page * rowsPerPage;
      
-    const newPageData = filteredData.slice(startIndex, endIndex);
+    const newPageData = filteredData?.slice(startIndex, endIndex);
   
      setPaginatedData(newPageData);
      
      }, [filteredData, page, rowsPerPage]);
   
+
+      useEffect(() => {
+   if (permintaanPenarikan) {
+      return;
+   } 
+
+  }, [permintaanPenarikan]);
+
+     if(loading) return <SkeletonPenarikan />; 
     
 
   return (
@@ -138,24 +145,24 @@ const TransaksiContent = () => {
             </tr>
           </thead>
           <tbody>
-            {paginatedData.length > 0 ? (
+            {paginatedData?.length > 0 ? (
               paginatedData.map((item) => (
                 <tr key={item.id} className="border-t hover:bg-gray-50 transition">
-                  <td className="py-3 px-4">{item.nama}</td>
-                  <td className="py-3 px-4">Rp {item.jumlah.toLocaleString()}</td>
-                  <td className="py-3 px-4">{item.tanggal}</td>
+                  <td className="py-3 px-4">{item.user__guru.name}</td>
+                  <td className="py-3 px-4">Rp {item.jumlahpenarikan.toLocaleString()}</td>
+                  <td className="py-3 px-4">{item.tglpermintaanpenarikan}</td>
                   <td className="py-3 px-4">
-                    {item.status === "Disetujui" && (
+                    {item.statuspermintaan === "Disetujui" && (
                       <span className="inline-flex items-center gap-1 text-green-600 font-medium">
                         <CheckCircle className="w-4 h-4" /> Disetujui
                       </span>
                     )}
-                    {item.status === "Menunggu" && (
+                    {item.statuspermintaan === "Menunggu" && (
                       <span className="inline-flex items-center gap-1 text-yellow-500 font-medium">
                         <Clock className="w-4 h-4" /> Menunggu
                       </span>
                     )}
-                    {item.status === "Ditolak" && (
+                    {item.statuspermintaan === "Ditolak" && (
                       <span className="inline-flex items-center gap-1 text-red-500 font-medium">
                         <XCircle className="w-4 h-4" /> Ditolak
                       </span>
@@ -174,7 +181,7 @@ const TransaksiContent = () => {
         </table>
             <Pagination
           currentPage={page}
-          totalData={filteredData.length}
+          totalData={filteredData?.length}
           onPageChange={setPage}
         />
       </div>

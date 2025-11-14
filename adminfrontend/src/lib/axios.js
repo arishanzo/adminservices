@@ -66,6 +66,14 @@ export const serviceClient = {
     });
   },
 
+  getAllPermintaanPenarikan: () => {
+    return axiosClient.get('/api/services/permintaanpenarikan', {
+      headers: {
+        'X-Service-Key': import.meta.env.VITE_SERVICE_KEY,
+      }
+    });
+  },
+
     putBookingKelasUser: (idBookingPrivate, statusBooking) => {
     return axiosClient.put(`/api/services/bookingupdate/${idBookingPrivate}`, statusBooking,{
       headers: {

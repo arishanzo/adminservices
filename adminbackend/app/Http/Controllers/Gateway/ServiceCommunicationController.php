@@ -15,82 +15,15 @@ class ServiceCommunicationController extends Controller
         $this->serviceClient = $serviceClient;
     }
 
-    public function getUserProfile(Request $request, $userId)
+   
+
+     public function getAllPermintaanPenarikan(Request $request)
     {
-        $result = $this->serviceClient->getUserData($userId);
+        $result = $this->serviceClient->getPermintaanPenarikan();
         
         if (!$result['success']) {
             return response()->json([
                 'error' => 'Failed to fetch user data',
-                'message' => $result['error'] ?? 'Service unavailable'
-            ], $result['status']);
-        }
-
-        return response()->json($result['data']);
-    }
-
-     public function getBookingKelas(Request $request, $idProfilGuru)
-    {
-        $result = $this->serviceClient->getBookingKelas($idProfilGuru);
-        
-        if (!$result['success']) {
-            return response()->json([
-                'error' => 'Failed to fetch user data',
-                'message' => $result['error'] ?? 'Service unavailable'
-            ], $result['status']);
-        }
-
-        return response()->json($result['data']);
-    }
-
-
-    public function putBookingKelas(Request $request, $idBookingPrivate)
-{
-    $payload = [
-        'status' => $request->status ?? 'Mulai'
-    ];
-
-   
-    $result = $this->serviceClient->putBookingKelas($idBookingPrivate, $payload);
-
-    if (!$result['success']) {
-        return response()->json([
-            'error' => 'Failed to update booking',
-            'message' => $result['error'] ?? 'Service unavailable'
-        ], $result['status']);
-    }
-
-    return response()->json($result['data'], $result['status']);
-}
-
-
-
-    public function putTglBooking(Request $request, $idtglbooking)
-{
-    $payload = [
-        'tglbooking' => $request->tglbooking ?? ''
-    ];
-
-   
-    $result = $this->serviceClient->putTglBooking($idtglbooking, $payload);
-
-    if (!$result['success']) {
-        return response()->json([
-            'error' => 'Failed to update Tanggal booking',
-            'message' => $result['error'] ?? 'Service unavailable'
-        ], $result['status']);
-    }
-
-    return response()->json($result['data'], $result['status']);
-}
-    
-    public function getGuruProfile(Request $request, $guruId)
-    {
-        $result = $this->serviceClient->getGuruData($guruId);
-        
-        if (!$result['success']) {
-            return response()->json([
-                'error' => 'Failed to fetch guru data',
                 'message' => $result['error'] ?? 'Service unavailable'
             ], $result['status']);
         }
