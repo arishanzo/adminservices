@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react";
+import { useEffect } from "react";
 import {Wallet, TrendingUp, TrendingDown} from "lucide-react";
 
 import SaldoMasuk from "./SaldoMasuk";

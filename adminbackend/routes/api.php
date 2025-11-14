@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Gateway\ServiceCommunicationController;
 use App\Http\Controllers\PasswordResetController;
+use App\Http\Controllers\PromoController;
 use App\Http\Controllers\saldo\SaldoKeluarController;
 use App\Http\Controllers\saldo\SaldoMasukController;
 use Illuminate\Support\Facades\Auth;
@@ -88,6 +89,10 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/saldomasuk', [SaldoMasukController::class, 'getAllSaldoMasuk']);
     Route::get('/saldokeluar', [SaldoKeluarController::class, 'getAllSaldoKeluar']);
+    Route::get('/promo', [PromoController::class, 'getAllPromo']);
+    Route::post('/createpromo', [PromoController::class, 'store']);
+    Route::post('/editpromo/{idpromo}', [PromoController::class, 'update']);
+    Route::delete('/hapuspromo/{idpromo}', [PromoController::class, 'destroy']);
 
 });
 
