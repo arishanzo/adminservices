@@ -14,7 +14,6 @@ const TransaksiContent = () => {
    const { permintaanPenarikan, loading }   = UseGetPermintaanPenarikan();
   const data = permintaanPenarikan;
 
-  console.log("Permintaan Penarikan:", permintaanPenarikan);
   
   const filteredData = useMemo(() => {
     return data?.filter((item) => {

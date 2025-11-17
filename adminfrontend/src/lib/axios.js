@@ -48,23 +48,6 @@ axiosClient.interceptors.response.use(
 
 // Service Communication Helper
 export const serviceClient = {
-  // Panggil user service dari guru frontend
-  getUserProfile: (userId) => {
-    return axiosClient.get(`/api/services/user/${userId}`, {
-      headers: {
-        'X-Service-Key': import.meta.env.VITE_SERVICE_KEY
-      }
-    });
-  },
-  
-
-  getBookingKelasUser: (idProfilGuru) => {
-    return axiosClient.get(`/api/services/booking/${idProfilGuru}`, {
-      headers: {
-        'X-Service-Key': import.meta.env.VITE_SERVICE_KEY,
-      }
-    });
-  },
 
   getAllPermintaanPenarikan: () => {
     return axiosClient.get('/api/services/permintaanpenarikan', {
@@ -74,23 +57,16 @@ export const serviceClient = {
     });
   },
 
-    putBookingKelasUser: (idBookingPrivate, statusBooking) => {
-    return axiosClient.put(`/api/services/bookingupdate/${idBookingPrivate}`, statusBooking,{
-      headers: {
-        'X-Service-Key': import.meta.env.VITE_SERVICE_KEY,
-          "Accept": "application/json",
-      }
+  getAllGuru: () => {
+
+    return axiosClient.get('/api/services/guru', {
+    headers: {
+       'X-Service-Key': import.meta.env.VITE_SERVICE_KEY,
+    }
     });
   },
 
-  putUpdateTglBooking: (idtglbooking, tanggalBooking) => {
-    return axiosClient.put(`/api/services/tglbooking/${idtglbooking}`, tanggalBooking,{
-      headers: {
-        'X-Service-Key': import.meta.env.VITE_SERVICE_KEY,
-          "Accept": "application/json",
-      }
-    });
-  },
+
   // Ambil data gabungan dari kedua service
   getCrossServiceData: (userId, guruId) => {
     return axiosClient.post('/services/cross-data', {
