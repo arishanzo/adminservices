@@ -82,11 +82,15 @@ class ServiceClient
         return $this->call('userservices', "users/{$userId}", 'GET');
     }
 
- public function getPermintaanPenarikan()
+   public function getPermintaanPenarikan()
     {
         return $this->call('guruservices', "services/permintaanpenarikan", 'GET');
     }
-
+    
+    public function getAllGuru()
+    {
+        return $this->call('guruservices', "services/guruall", 'GET');
+    }
 
     public function getGuruData($guruId)
     {

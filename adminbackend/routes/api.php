@@ -66,6 +66,7 @@ Route::get('/hello', function () {
 
 Route::prefix('services')->middleware(['throttle:100,1', 'service.auth'])->group(function () {
    Route::get('permintaanpenarikan', [ServiceCommunicationController::class, 'getAllPermintaanPenarikan']);
+   Route::get('guruAll', [ServiceCommunicationController::class, 'getGuruAll']);
    Route::post('cross-data', [ServiceCommunicationController::class, 'crossServiceData']);
 });
 

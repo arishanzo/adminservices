@@ -58,16 +58,13 @@ export const serviceClient = {
   },
 
   getAllGuru: () => {
-
-    return axiosClient.get('/api/services/guru', {
+    return axiosClient.get('/api/services/guruAll', {
     headers: {
        'X-Service-Key': import.meta.env.VITE_SERVICE_KEY,
     }
     });
   },
 
-
-  // Ambil data gabungan dari kedua service
   getCrossServiceData: (userId, guruId) => {
     return axiosClient.post('/services/cross-data', {
       user_id: userId,

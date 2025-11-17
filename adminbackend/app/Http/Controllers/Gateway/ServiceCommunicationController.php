@@ -31,6 +31,21 @@ class ServiceCommunicationController extends Controller
         return response()->json($result['data']);
     }
 
+    public function getGuruAll () 
+    {
+        $result = $this->serviceClient->getAllGuru();
+
+         
+        if (!$result['success']) {
+            return response()->json([
+                'error' => 'Failed to fetch user data',
+                'message' => $result['error'] ?? 'Service unavailable'
+            ], $result['status']);
+        }
+
+        return response()->json($result['data']);
+    }
+
 
    
     public function crossServiceData(Request $request)

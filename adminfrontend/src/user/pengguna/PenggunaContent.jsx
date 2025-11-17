@@ -1,5 +1,7 @@
-import { useState } from "react";
-import { Users, User, GraduationCap, Search, Mail, Phone, UserCheck, UserX } from "lucide-react";
+import { useEffect, useState } from "react";
+import {User, GraduationCap, Search, Phone, UserCheck, UserX } from "lucide-react";
+import { UseGetGuru } from "../../hook/useGetGuru";
+import SkeletonPengguna from "./SkeletonPengguna";
 
 const PenggunaContent = () => {
   const [tab, setTab] = useState("murid");
@@ -10,17 +12,23 @@ const PenggunaContent = () => {
     { id: 2, nama: "Rian Pratama", email: "rianp@gmail.com", telp: "08127881234", status: "Nonaktif" },
   ];
 
-  const dataGuru = [
-    { id: 1, nama: "Budi Santoso", email: "budi@guru.com", telp: "08567890012", status: "Aktif" },
-    { id: 2, nama: "Siti Aminah", email: "siti@guru.com", telp: "08127776655", status: "Aktif" },
-    { id: 3, nama: "Rizky Ramadhan", email: "rizky@guru.com", telp: "08512233445", status: "Nonaktif" },
-  ];
+  const { guru, loading } = UseGetGuru();
+  const dataGuru = guru;
 
   const dataTampil =
     tab === "murid"
       ? dataMurid.filter((d) => d.nama.toLowerCase().includes(searchTerm.toLowerCase()))
       : dataGuru.filter((d) => d.nama.toLowerCase().includes(searchTerm.toLowerCase()));
 
+       useEffect(() => {
+         if (!guru) {
+            return;
+         } 
+      
+        }, [guru]);
+
+  if (loading) return <SkeletonPengguna />
+        
   return (
     <div className="p-6 bg-gray-50 min-h-screen space-y-8">
       {/* Header */}
