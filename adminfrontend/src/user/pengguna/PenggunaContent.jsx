@@ -1,31 +1,49 @@
-import { useEffect, useState } from "react";
-import {User, GraduationCap, Search, Phone, UserCheck, UserX } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import {User, GraduationCap, Search, Phone, UserCheck, UserX, Calendar } from "lucide-react";
 import { UseGetGuru } from "../../hook/useGetGuru";
 import SkeletonPengguna from "./SkeletonPengguna";
+import { UseGetMurid } from "../../hook/useGetMurid";
+import Pagination from "../components/Pagination";
 
 const PenggunaContent = () => {
   const [tab, setTab] = useState("murid");
   const [searchTerm, setSearchTerm] = useState("");
 
-  const dataMurid = [
-    { id: 1, nama: "Ayu Lestari", email: "ayu@gmail.com", telp: "08123456789", status: "Aktif" },
-    { id: 2, nama: "Rian Pratama", email: "rianp@gmail.com", telp: "08127881234", status: "Nonaktif" },
-  ];
+  
+  const [page, setPage] = useState(1);
+  const [paginatedData, setPaginatedData] = useState([]);
+   const rowsPerPage = 5;
 
-  const { guru, loading } = UseGetGuru();
-  const dataGuru = guru;
+  const { murid } = UseGetMurid() || [];
 
-  const dataTampil =
-    tab === "murid"
-      ? dataMurid.filter((d) => d.nama.toLowerCase().includes(searchTerm.toLowerCase()))
-      : dataGuru.filter((d) => d.nama.toLowerCase().includes(searchTerm.toLowerCase()));
+const { guru, loading } = UseGetGuru() || [];
 
+
+const dataTampil = useMemo(() => {
+ return  tab === "murid"
+    ? murid?.filter((d) =>
+        (d?.user__login?.nama_user|| '').toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    :  guru?.filter((d) =>
+        (d.user_guru?.name || '').toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }, [tab, murid, guru, searchTerm]);
+
+
+      console.log(dataTampil)
        useEffect(() => {
-         if (!guru) {
+         if (!guru && !murid) {
             return;
          } 
       
-        }, [guru]);
+          const startIndex = (page - 1) * rowsPerPage;
+      const endIndex = page * rowsPerPage;
+       
+      const newPageData = dataTampil?.slice(startIndex, endIndex);
+    
+       setPaginatedData(newPageData)
+
+        }, [guru, murid, dataTampil, page, rowsPerPage]);
 
   if (loading) return <SkeletonPengguna />
         
@@ -81,26 +99,42 @@ const PenggunaContent = () => {
           <thead className="bg-gray-100 text-gray-700">
             <tr>
               <th className="py-3 px-4 font-medium">Nama</th>
+              <th className="py-3 px-4 font-medium">Alamat Lengkap</th>
               <th className="py-3 px-4 font-medium">Telepon</th>
-              <th className="py-3 px-4 font-medium text-center">Status</th>
+              
+              <th className="py-3 px-4 font-medium text-center">Tanggal Daftar</th>
+              <th className="py-3 px-4 font-medium text-center">Status Akun</th>
             </tr>
           </thead>
           <tbody>
-            {dataTampil.length > 0 ? (
-              dataTampil.map((item) => (
+            {paginatedData.length > 0 ? (
+              paginatedData.map((item) => (
                 <tr key={item.id} className="border-t hover:bg-gray-50 transition">
-                  <td className="py-3 px-4">{item.nama}</td>
-                  <td className="py-3 px-4 flex items-center gap-2 text-gray-600">
-                    <Phone className="w-4 h-4 text-gray-400" /> {item.telp}
+                  <td className="py-3 px-4">{tab  === 'murid' ? item.user__login?.nama_user : item.user__guru?.name}</td>
+                    <td className="py-3 px-4">{item.alamatlengkap}</td>
+                  <td className="py-3 px-4 flex items-center gap-2">
+                    <Phone className="w-4 h-4 text-gray-400" /> {item.no_telp}
                   </td>
+
+                     <td className="py-3 px-4 text-center">
+                         <span className="inline-flex items-center gap-1 ">
+                    <Calendar className="w-4 h-4 " /> {new Date(item.created_at).toLocaleDateString("id-ID", {
+                        day: "2-digit",
+                        month: "long",
+                        year: "numeric",
+                      })
+                      }
+                    </span>
+                  </td>
+                  
                   <td className="py-3 px-4 text-center">
-                    {item.status === "Aktif" ? (
+                    {item.statusakun === "complete" ? (
                       <span className="inline-flex items-center gap-1 text-green-600 font-medium">
-                        <UserCheck className="w-4 h-4" /> Aktif
+                        <UserCheck className="w-4 h-4" />Complete
                       </span>
                     ) : (
                       <span className="inline-flex items-center gap-1 text-red-500 font-medium">
-                        <UserX className="w-4 h-4" /> Nonaktif
+                        <UserX className="w-4 h-4" /> Belum Complete
                       </span>
                     )}
                   </td>
@@ -113,9 +147,17 @@ const PenggunaContent = () => {
                 </td>
               </tr>
             )}
+
           </tbody>
         </table>
       </div>
+      
+            
+           <Pagination
+          currentPage={page}
+          totalData={dataTampil.length}
+          onPageChange={setPage}
+        />
     </div>
   );
 };

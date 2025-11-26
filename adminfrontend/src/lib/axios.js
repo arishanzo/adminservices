@@ -65,6 +65,14 @@ export const serviceClient = {
     });
   },
 
+   getAllMurid: () => {
+    return axiosClient.get('/api/services/muridAll', {
+    headers: {
+       'X-Service-Key': import.meta.env.VITE_SERVICE_KEY,
+    }
+    });
+  },
+
   getCrossServiceData: (userId, guruId) => {
     return axiosClient.post('/services/cross-data', {
       user_id: userId,

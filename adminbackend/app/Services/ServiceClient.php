@@ -92,6 +92,11 @@ class ServiceClient
         return $this->call('guruservices', "services/guruall", 'GET');
     }
 
+       public function getAllMurid()
+    {
+        return $this->call('userservices', "admin/muridall", 'GET');
+    }
+
     public function getGuruData($guruId)
     {
         return $this->call('guruservices', "profile/{$guruId}", 'GET');
