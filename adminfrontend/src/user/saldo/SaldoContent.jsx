@@ -15,8 +15,6 @@ const totalMasuk = saldoMasuk?.reduce((a, b) => a + (b.jumlahsaldo || 0), 0);
 const totalKeluar = saldoKeluar?.reduce((a, b) => a + (b.jumlahsaldokeluar || 0), 0);
 
 const saldoTersedia = totalMasuk - totalKeluar;
- console.log("Saldo Masuk:", saldoMasuk);
- console.log("Saldo Keluar:", saldoKeluar);
 
  useEffect(() => {
    if (!saldoMasuk || !saldoKeluar) {

@@ -137,7 +137,11 @@ const SaldoKeluar = ({saldoKeluar, totalKeluar}) => {
                 
                 <td className="py-2">{item?.idguru}</td>
                 <td className="py-2">{item?.keterangansaldokeluar}</td>
-                <td className="py-2 text-gray-600">{item?.tanggalsaldokeluar}</td>
+                <td className="py-2 text-gray-600">{ new Date(item?.tglsaldokeluar).toLocaleDateString("id-ID", {
+                    day: "2-digit",
+                    month: "long",
+                    year: "numeric",
+                  })}</td>
                 <td className="py-2 text-right text-red-600 font-medium">
                   -Rp {(item.jumlahsaldokeluar ?? '').toLocaleString("id-ID")}
                 </td>

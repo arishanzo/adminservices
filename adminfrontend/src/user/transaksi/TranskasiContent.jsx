@@ -44,7 +44,15 @@ const TransaksiContent = () => {
   }, [permintaanPenarikan]);
 
      if(loading) return <SkeletonPenarikan />; 
+
+
+   const transkasiSukses = permintaanPenarikan?.filter((item) => {
+   return item.statuspermintaan === "Disetujui"
+  });
     
+     const transkasiPending = permintaanPenarikan?.filter((item) => {
+   return item.statuspermintaan === "Pending"
+  });
 
   return (
     <div className="p-6 bg-gray-50 min-h-screen space-y-8">
@@ -59,7 +67,7 @@ const TransaksiContent = () => {
         <div className="bg-white p-5 rounded-2xl shadow-sm flex items-center justify-between">
           <div>
             <h2 className="text-sm text-gray-500">Total Permintaan</h2>
-            <p className="text-2xl font-semibold text-gray-800 mt-1">23</p>
+            <p className="text-2xl font-semibold text-gray-800 mt-1">{permintaanPenarikan?.length}</p>
           </div>
           <Clock className="w-8 h-8 text-indigo-500" />
         </div>
@@ -67,7 +75,7 @@ const TransaksiContent = () => {
         <div className="bg-white p-5 rounded-2xl shadow-sm flex items-center justify-between">
           <div>
             <h2 className="text-sm text-gray-500">Sudah Disetujui</h2>
-            <p className="text-2xl font-semibold text-green-600 mt-1">14</p>
+            <p className="text-2xl font-semibold text-green-600 mt-1">{transkasiSukses.length}</p>
           </div>
           <CheckCircle className="w-8 h-8 text-green-500" />
         </div>
@@ -75,7 +83,7 @@ const TransaksiContent = () => {
         <div className="bg-white p-5 rounded-2xl shadow-sm flex items-center justify-between">
           <div>
             <h2 className="text-sm text-gray-500">Menunggu Proses</h2>
-            <p className="text-2xl font-semibold text-yellow-500 mt-1">9</p>
+            <p className="text-2xl font-semibold text-yellow-500 mt-1">{transkasiPending.length}</p>
           </div>
           <Clock className="w-8 h-8 text-yellow-500" />
         </div>

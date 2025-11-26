@@ -1,20 +1,78 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ArrowDownCircle, ArrowUpCircle, Wallet, Users, Star, BookOpen, TrendingUp, Settings, Clock, CheckCircle } from "lucide-react";
+import PermintaanPenarikan from "./PermintaanPenarikan";
+import RiwayatTransaksi from "./RiwayatTransaksi";
+import { UseGetSaldoKeluar } from "../../hook/useGetSaldoKeluar";
+import { UseGetSaldoMasuk } from "../../hook/useGetSaldoMasuk";
+import SkeletonDashboard from "./SkeletonDashboard";
+import { UseGetPermintaanPenarikan } from "../../hook/useGetPermintaanPenarikan";
+
+function formatRupiahSingkat(angka) {
+  if (angka >= 1_000_000) {
+    return (angka / 1_000_000).toFixed(1).replace(/\.0$/, "") + "M";
+  } else if (angka >= 1_000) {
+    return (angka / 1_000).toFixed(1).replace(/\.0$/, "") + "K";
+  }
+  return angka.toString();
+}
+
 
 const Content = () => {
-  const [balance, setBalance] = useState(2450000);
 
 
-  const transactions = [
-    { id: 1, type: "Masuk", amount: 750000, date: "10 Nov 2025", status: "Berhasil" },
-    { id: 2, type: "Keluar", amount: 300000, date: "09 Nov 2025", status: "Diproses" },
-    { id: 3, type: "Masuk", amount: 1250000, date: "08 Nov 2025", status: "Berhasil" },
-  ];
+  const [ tglPerbarui, setTglPerbarui] = useState();
 
-  const withdrawRequests = [
-    { id: 1, name: "Ahmad Rizki", amount: 500000, status: "Menunggu" },
-    { id: 2, name: "Siti Nurhaliza", amount: 750000, status: "Berhasil" },
-  ];
+  const now = new Date();
+  const bulanSekarang = now.getMonth();
+  const tahunSekarang = now.getFullYear();
+
+
+  const { saldoMasuk }= UseGetSaldoMasuk();
+  const { saldoKeluar } = UseGetSaldoKeluar() ;
+  const { permintaanPenarikan, loading }   = UseGetPermintaanPenarikan();
+
+
+  const totalSaldoMasuk = saldoMasuk?.reduce((acc, item) => acc + item.jumlahsaldo, 0);
+  const totalSaldoKeluar = saldoKeluar?.reduce((acc, item) => acc + item.jumlahsaldokeluar, 0);
+
+  const totalSaldoSaatIni = totalSaldoMasuk - totalSaldoKeluar;
+
+  
+  const dataSaldoBulanIni = saldoMasuk?.filter((item) => {
+   const tgl = new Date(item.tglsaldomasuk);
+   return tgl.getMonth() === bulanSekarang && tgl.getFullYear() === tahunSekarang
+  });
+
+  const totalSaldoBulanIni = dataSaldoBulanIni?.reduce((acc, item) => acc + item.jumlahsaldo, 0);
+
+
+  const dataPenarikanBulanIni = saldoKeluar?.filter((item) => {
+   const tgl = new Date(item.tglsaldokeluar);
+   return tgl.getMonth() === bulanSekarang && tgl.getFullYear() === tahunSekarang
+  });
+
+  const totalPenarikanBulanIni = dataPenarikanBulanIni?.reduce((acc, item) => acc + item.jumlahsaldokeluar, 0);
+  const totalTransaksiBulanIni = dataPenarikanBulanIni?.length + dataSaldoBulanIni?.length;
+
+
+console.log(saldoKeluar)
+
+   useEffect(() => {
+     if (!saldoMasuk || !saldoKeluar) {
+        return;
+     } 
+
+   if (saldoMasuk || saldoKeluar) {
+        return setTglPerbarui(new Date());
+     } 
+
+     
+  
+    }, [saldoMasuk, saldoKeluar]);
+
+    if (loading) return <SkeletonDashboard />
+
+
 
   return (
     <div className="p-6 bg-gray-50 min-h-screen space-y-8">
@@ -29,8 +87,14 @@ const Content = () => {
         <div className="flex items-center justify-between">
           <div className="mb-2">
             <h3 className="font-semibold text-sm">Saldo Sistem Tersedia</h3>
-            <p className="text-3xl font-bold mt-1">Rp {balance.toLocaleString("id-ID")}</p>
-            <p className="text-sm opacity-80 mt-1">Terakhir diperbarui: 10 Nov 2025, 14:30</p>
+            <p className="text-3xl font-bold mt-1">Rp {totalSaldoSaatIni.toLocaleString("id-ID")}</p>
+            <p className="text-sm opacity-80 mt-1">Terakhir diperbarui: {
+              new Date(tglPerbarui).toLocaleDateString("id-ID", {
+                day: "2-digit",
+                month: "long",
+                year: "numeric",
+              })
+              }</p>
           </div>
           <Wallet className="w-10 h-10 opacity-80" />
         </div>
@@ -43,32 +107,32 @@ const Content = () => {
             <p className="text-gray-500 text-sm">Total Saldo Masuk</p>
             <ArrowDownCircle className="w-6 h-6 text-green-500" />
           </div>
-          <p className="text-2xl font-bold text-gray-800">Rp 2,5M</p>
-          <p className="text-xs text-green-600">+12% dari bulan lalu</p>
+          <p className="text-2xl font-bold text-gray-800">Rp. {formatRupiahSingkat(totalSaldoBulanIni)}</p>
+          <p className="text-xs text-green-600 pt-1">(+) Total Saldo Bulan Ini</p>
         </div>
         <div className="bg-white p-5 rounded-xl shadow-sm">
           <div className="flex items-center justify-between mb-2">
             <p className="text-gray-500 text-sm">Total Penarikan</p>
             <ArrowUpCircle className="w-6 h-6 text-red-500" />
           </div>
-          <p className="text-2xl font-bold text-gray-800">Rp 800K</p>
-          <p className="text-xs text-red-600">+5% dari bulan lalu</p>
+          <p className="text-2xl font-bold text-gray-800">Rp. {formatRupiahSingkat(totalPenarikanBulanIni)}</p>
+          <p className="text-xs text-red-600 pt-1">(-) Penarikan Bulan Ini</p>
         </div>
         <div className="bg-white p-5 rounded-xl shadow-sm">
           <div className="flex items-center justify-between mb-2">
             <p className="text-gray-500 text-sm">Permintaan Pending</p>
             <Clock className="w-6 h-6 text-yellow-500" />
           </div>
-          <p className="text-2xl font-bold text-gray-800">3</p>
-          <p className="text-xs text-yellow-600">Menunggu approval</p>
+          <p className="text-2xl font-bold text-gray-800">{permintaanPenarikan?.length}</p>
+          <p className="text-xs text-yellow-600 pt-1">Menunggu approval</p>
         </div>
         <div className="bg-white p-5 rounded-xl shadow-sm">
           <div className="flex items-center justify-between mb-2">
             <p className="text-gray-500 text-sm">Transaksi Hari Ini</p>
             <CheckCircle className="w-6 h-6 text-blue-500" />
           </div>
-          <p className="text-2xl font-bold text-gray-800">12</p>
-          <p className="text-xs text-blue-600">5 masuk, 7 keluar</p>
+          <p className="text-2xl font-bold text-gray-800">{totalTransaksiBulanIni}</p>
+          <p className="text-xs text-blue-600">{dataSaldoBulanIni.length} masuk, {dataPenarikanBulanIni.length} keluar</p>
         </div>
       </div>
 
@@ -93,71 +157,11 @@ const Content = () => {
       </div>
 
       {/* Withdraw Requests */}
-      <div className="bg-white p-6 rounded-xl shadow-md">
-        <h2 className="text-xl font-semibold mb-4">Permintaan Penarikan</h2>
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="border-b text-gray-500">
-              <th className="py-2 text-left">Nama</th>
-              <th className="py-2 text-left">Jumlah</th>
-              <th className="py-2 text-left">Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {withdrawRequests.map((req) => (
-              <tr key={req.id} className="border-b hover:bg-gray-50">
-                <td className="py-2">{req.name}</td>
-                <td className="py-2">Rp {req.amount.toLocaleString("id-ID")}</td>
-                <td className="py-2">
-                  <span
-                    className={`px-2 py-1 rounded-full text-xs ${
-                      req.status === "Berhasil"
-                        ? "bg-green-100 text-green-700"
-                        : "bg-yellow-100 text-yellow-700"
-                    }`}
-                  >
-                    {req.status}
-                  </span>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+     <PermintaanPenarikan getPermintaanPenarikan={permintaanPenarikan} />
 
       {/* Transaction History */}
-      <div className="bg-white p-6 rounded-xl shadow-md">
-        <h2 className="text-xl font-semibold mb-4">Riwayat Transaksi</h2>
-        <div className="divide-y">
-          {transactions.map((tx) => (
-            <div key={tx.id} className="flex justify-between items-center py-3">
-              <div className="flex items-center gap-3">
-                {tx.type === "Masuk" ? (
-                  <ArrowDownCircle className="w-6 h-6 text-green-500" />
-                ) : (
-                  <ArrowUpCircle className="w-6 h-6 text-red-500" />
-                )}
-                <div>
-                  <p className="font-medium text-gray-800">
-                    {tx.type === "Masuk" ? "Saldo Masuk" : "Penarikan"}
-                  </p>
-                  <p className="text-xs text-gray-500">{tx.date}</p>
-                </div>
-              </div>
-              <div className="text-right">
-                <p
-                  className={`font-semibold ${
-                    tx.type === "Masuk" ? "text-green-600" : "text-red-600"
-                  }`}
-                >
-                  {tx.type === "Masuk" ? "+" : "-"}Rp {tx.amount.toLocaleString("id-ID")}
-                </p>
-                <p className="text-xs text-gray-500">{tx.status}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
+      <RiwayatTransaksi getSaldoMasuk={dataSaldoBulanIni} getSaldoKeluar={dataPenarikanBulanIni} />
+      
     </div>
   );
 };

@@ -138,7 +138,11 @@ useEffect(() => {
               <tr key={item?.idsaldomasuk} className="border-b hover:bg-gray-50">
                 <td className="py-2">{item?.idbookingprivate}</td>
                 <td className="py-2 text-gray-600">{item?.keterangansaldomasuk}</td>
-                <td className="py-2 text-gray-600">{item?.tglsaldomasuk}</td>
+                <td className="py-2 text-gray-600">{ new Date(item?.tglsaldomasuk).toLocaleDateString("id-ID", {
+                    day: "2-digit",
+                    month: "long",
+                    year: "numeric",
+                  })}</td>
                 <td className="py-2 text-right text-green-600 font-medium">
                   +Rp {(item?.jumlahsaldo ?? '').toLocaleString("id-ID")}
                 </td>
