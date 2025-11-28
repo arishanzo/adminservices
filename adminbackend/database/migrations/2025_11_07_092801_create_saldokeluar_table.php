@@ -14,7 +14,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('saldokeluar', function (Blueprint $table) {
-            $table->ulid('idsaldokeluar')->primary();
+            $table->uuid('idsaldokeluar')->primary();
             $table->uuid('idguru');
             $table->date('tglsaldokeluar');
             $table->integer('jumlahsaldokeluar');

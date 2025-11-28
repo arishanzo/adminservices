@@ -51,8 +51,18 @@ const Content = () => {
    return tgl.getMonth() === bulanSekarang && tgl.getFullYear() === tahunSekarang
   });
 
+   const dataSaldoHariIni = saldoMasuk?.filter((item) => {
+   const tgl = new Date(item.tglsaldomasuk);
+   return tgl === now
+  })
+
+   const dataPenarikanHariIni = saldoKeluar?.filter((item) => {
+   const tgl = new Date(item.tglsaldokeluar);
+   return tgl === now
+   })
+
   const totalPenarikanBulanIni = dataPenarikanBulanIni?.reduce((acc, item) => acc + item.jumlahsaldokeluar, 0);
-  const totalTransaksiBulanIni = dataPenarikanBulanIni?.length + dataSaldoBulanIni?.length;
+  const totalTransaksiBulanIni = dataPenarikanHariIni?.length + dataSaldoHariIni?.length;
 
 
 console.log(saldoKeluar)
@@ -132,7 +142,7 @@ console.log(saldoKeluar)
             <CheckCircle className="w-6 h-6 text-blue-500" />
           </div>
           <p className="text-2xl font-bold text-gray-800">{totalTransaksiBulanIni}</p>
-          <p className="text-xs text-blue-600">{dataSaldoBulanIni.length} masuk, {dataPenarikanBulanIni.length} keluar</p>
+          <p className="text-xs text-blue-600">{dataSaldoHariIni.length} masuk, {dataPenarikanHariIni.length} keluar</p>
         </div>
       </div>
 

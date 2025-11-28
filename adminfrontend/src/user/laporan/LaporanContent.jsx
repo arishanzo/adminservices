@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   BarChart,
   LineChart,
@@ -22,41 +22,63 @@ import {
 import * as XLSX from "xlsx";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
+import { UseGetSaldoMasuk } from "../../hook/useGetSaldoMasuk";
+import { UseGetSaldoKeluar } from "../../hook/useGetSaldoKeluar";
+import SkeletonLaporan from "./SkeletonLaporan";
+import { LaporanHarian } from "./data/LaporanHarian";
+import { totalPerTahun } from "./fnc/FncTahunan";
+import { TotalBulanan } from "./fnc/FncBulanan";
+import { TotalMingguan } from "./fnc/fncMinggu";
 
 const LaporanContent = () => {
   const [filter, setFilter] = useState("bulan");
 
+
+  
+  const { saldoMasuk }= UseGetSaldoMasuk();
+  const { saldoKeluar, loading } = UseGetSaldoKeluar() ;
+  const { dataPenarikanHariIni, dataSaldoHariIni } = LaporanHarian(saldoMasuk, saldoKeluar);
+  // const { dataPenarikanTahunIni, dataSaldoTahunIni } = LaporanTahunan(saldoMasuk, saldoKeluar);
+ 
+  
+  useEffect(() => {
+   if (!saldoMasuk || !saldoKeluar) {
+      return;
+   } 
+  }, [saldoMasuk, saldoKeluar]);
+
+
+  if(loading) return <SkeletonLaporan/>
+
+
+  const dataGroups = [
+    ...saldoMasuk.map(item => ({tanggal: item.tglsaldomasuk, pemasukan: item.jumlahsaldo})),
+    ...saldoKeluar.map(item => ({ tanggal: item.tglsaldokeluar , penarikan: item.jumlahsaldokeluar}))
+  ]
+
+
   // ====== Data Dummy ======
-  const dataHarian = [
-    { name: "Sen", pemasukan: 400000, pengeluaran: 150000 },
-    { name: "Sel", pemasukan: 300000, pengeluaran: 200000 },
-    { name: "Rab", pemasukan: 500000, pengeluaran: 250000 },
-    { name: "Kam", pemasukan: 450000, pengeluaran: 100000 },
-    { name: "Jum", pemasukan: 600000, pengeluaran: 300000 },
-  ];
+ const dataHarian = dataSaldoHariIni.map(item => {
+  const tanggal = new Date(item.tglsaldomasuk);
+  const namaHari = tanggal.toLocaleDateString("id-ID", { weekday: "long" });
 
-  const dataMingguan = [
-    { name: "Minggu 1", pemasukan: 2200000, pengeluaran: 1100000 },
-    { name: "Minggu 2", pemasukan: 2800000, pengeluaran: 1200000 },
-    { name: "Minggu 3", pemasukan: 2600000, pengeluaran: 1400000 },
-    { name: "Minggu 4", pemasukan: 3000000, pengeluaran: 1600000 },
-  ];
+  // cari pengeluaran yang tanggalnya sama
+  const penarikan = dataPenarikanHariIni.find(
+    p => new Date(p.tglsaldokeluar).toDateString() === tanggal.toDateString()
+  );
 
-  const dataBulanan = [
-    { name: "Jan", pemasukan: 10000000, pengeluaran: 7000000 },
-    { name: "Feb", pemasukan: 9000000, pengeluaran: 5000000 },
-    { name: "Mar", pemasukan: 11000000, pengeluaran: 8000000 },
-    { name: "Apr", pemasukan: 12000000, pengeluaran: 6000000 },
-    { name: "Mei", pemasukan: 15000000, pengeluaran: 10000000 },
-  ];
+  return {
+    name: namaHari,
+    pemasukan: item.jumlahsaldo,
+    pengeluaran: penarikan ? penarikan.jumlahsaldokeluar : 0
+  };
+});
 
-  const dataTahunan = [
-    { name: "2020", pemasukan: 80000000, pengeluaran: 50000000 },
-    { name: "2021", pemasukan: 95000000, pengeluaran: 60000000 },
-    { name: "2022", pemasukan: 100000000, pengeluaran: 75000000 },
-    { name: "2023", pemasukan: 120000000, pengeluaran: 85000000 },
-    { name: "2024", pemasukan: 140000000, pengeluaran: 95000000 },
-  ];
+  const dataBulanan = TotalBulanan(dataGroups);
+  const dataTahunan = totalPerTahun(dataGroups);
+  const dataMingguan = TotalMingguan(dataGroups);
+
+  console.log(dataMingguan)
 
   const getData = () => {
     switch (filter) {

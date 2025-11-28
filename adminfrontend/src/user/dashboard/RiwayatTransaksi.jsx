@@ -6,7 +6,6 @@ const RiwayatTransaksi = ({ getSaldoMasuk, getSaldoKeluar }) => {
     ...getSaldoKeluar.map(item => ({ type: "keluar", tanggal: item.tglsaldokeluar , saldo: item.jumlahsaldokeluar}))
   ].sort((a, b) => new Date(b.tanggal) - new Date(a.tanggal)).slice(0,3) ;
 
-  console.log(transactions)
 
     return (
  <div className="bg-white p-6 rounded-xl shadow-md">
