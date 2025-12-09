@@ -84,6 +84,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/saldomasuk', [SaldoMasukController::class, 'getAllSaldoMasuk']);
     Route::get('/saldokeluar', [SaldoKeluarController::class, 'getAllSaldoKeluar']);
+
+    
     Route::get('/promo', [PromoController::class, 'getAllPromo']);
     Route::post('/createpromo', [PromoController::class, 'store']);
     Route::post('/editpromo/{idpromo}', [PromoController::class, 'update']);
