@@ -1,14 +1,17 @@
 import { useMemo } from "react";
+import { UseGetGuru } from "../../hook/useGetGuru";
+import { CheckCircle, Clock, XCircle } from "lucide-react";
 
 const PermintaanPenarikan = ({ getPermintaanPenarikan }) => {
 
   
+  const { guru } = UseGetGuru() || [];
+
      const withdrawRequests = useMemo(() => {
         return getPermintaanPenarikan?.filter((item) => 
           item.statuspermintaan === 'pending'
           ).slice(0,3) 
         }, [getPermintaanPenarikan]);
-
 
     return (
             <div className="bg-white p-6 rounded-xl shadow-md">
@@ -24,9 +27,9 @@ const PermintaanPenarikan = ({ getPermintaanPenarikan }) => {
           </thead>
           <tbody>
             {withdrawRequests?.length > 0 ? (
-              withdrawRequests.map((item) => (
-                <tr key={item.id} className="border-t hover:bg-gray-50 transition">
-                  <td className="py-3 px-4">{item.user__guru.name}</td>
+              withdrawRequests.map((item, index) => (
+                <tr key={item.idpermintaanpenarikan || index} className="border-t hover:bg-gray-50 transition">
+                  <td className="py-3 px-4">{guru?.find(b => b.idprofilguru === item.idprofilguru).user__guru.name}</td>
                   <td className="py-3 px-4">Rp {item.jumlahpenarikan.toLocaleString()}</td>
                   <td className="py-3 px-4">{item.tglpermintaanpenarikan}</td>
                   <td className="py-3 px-4">
@@ -35,7 +38,7 @@ const PermintaanPenarikan = ({ getPermintaanPenarikan }) => {
                         <CheckCircle className="w-4 h-4" /> Disetujui
                       </span>
                     )}
-                    {item.statuspermintaan === "Menunggu" && (
+                    {item.statuspermintaan === "pending" && (
                       <span className="inline-flex items-center gap-1 text-yellow-500 font-medium">
                         <Clock className="w-4 h-4" /> Menunggu
                       </span>

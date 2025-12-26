@@ -3,6 +3,7 @@ import { Search, Filter, Calendar, CheckCircle, Clock, XCircle } from "lucide-re
 import Pagination from "../components/Pagination";
 import { UseGetPermintaanPenarikan } from "../../hook/useGetPermintaanPenarikan";
 import SkeletonPenarikan from "./SkeletonPenarikan";
+import { UseGetGuru } from "../../hook/useGetGuru";
 
 const TransaksiContent = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -11,17 +12,18 @@ const TransaksiContent = () => {
   const [page, setPage] = useState(1);
   const [paginatedData, setPaginatedData] = useState([]);
 
-   const { permintaanPenarikan, loading }   = UseGetPermintaanPenarikan();
+  const { guru } = UseGetGuru() || [];
+  
+  const { permintaanPenarikan, loading }   = UseGetPermintaanPenarikan();
   const data = permintaanPenarikan;
 
-  
   const filteredData = useMemo(() => {
     return data?.filter((item) => {
-      const cocokNama = item?.user__guru.name.toLowerCase().includes(searchTerm.toLowerCase());
+      const cocokNama = guru?.find(b => b.idprofilguru === item.idprofilguru).user__guru.name.toLowerCase().includes(searchTerm.toLowerCase());
       const cocokStatus = filterStatus === "Semua" || item.statuspermintaan === filterStatus;
       return cocokNama && cocokStatus;
     });
-  }, [searchTerm, filterStatus, data]);
+  }, [searchTerm, filterStatus, data, guru]);
 
     const rowsPerPage = 5;
 
@@ -51,7 +53,7 @@ const TransaksiContent = () => {
   });
     
      const transkasiPending = permintaanPenarikan?.filter((item) => {
-   return item.statuspermintaan === "Pending"
+   return item.statuspermintaan === "pending"
   });
 
   return (
@@ -149,13 +151,14 @@ const TransaksiContent = () => {
               <th className="py-3 px-4 font-medium">Jumlah</th>
               <th className="py-3 px-4 font-medium">Tanggal</th>
               <th className="py-3 px-4 font-medium">Status</th>
+              <th className="py-3 px-4 font-medium">Action</th>
             </tr>
           </thead>
           <tbody>
             {paginatedData?.length > 0 ? (
               paginatedData.map((item) => (
                 <tr key={item.id} className="border-t hover:bg-gray-50 transition">
-                  <td className="py-3 px-4">{item.user__guru.name}</td>
+                  <td className="py-3 px-4">{guru?.find(b => b.idprofilguru === item.idprofilguru).user__guru.name}</td>
                   <td className="py-3 px-4">Rp {item.jumlahpenarikan.toLocaleString()}</td>
                   <td className="py-3 px-4">{item.tglpermintaanpenarikan}</td>
                   <td className="py-3 px-4">
@@ -164,7 +167,7 @@ const TransaksiContent = () => {
                         <CheckCircle className="w-4 h-4" /> Disetujui
                       </span>
                     )}
-                    {item.statuspermintaan === "Menunggu" && (
+                    {item.statuspermintaan === "pending" && (
                       <span className="inline-flex items-center gap-1 text-yellow-500 font-medium">
                         <Clock className="w-4 h-4" /> Menunggu
                       </span>
@@ -175,6 +178,24 @@ const TransaksiContent = () => {
                       </span>
                     )}
                   </td>
+
+                    <td className="py-3 px-4">
+                    {item.statuspermintaan === "Disetujui" && (
+                      <span className="inline-flex items-center gap-1 text-green-600 font-medium">
+                        <CheckCircle className="w-4 h-4" /> Disetujui
+                      </span>
+                    )}
+                    {item.statuspermintaan === "pending" && (
+                      <button className="inline-flex items-center gap-1 text-green-900 font-medium bg-green-100 px-3 py-1 rounded-lg hover:bg-green-200">
+                        <Clock className="w-4 h-4" /> Setujui
+                      </button>
+                    )}
+                    {item.statuspermintaan === "Ditolak" && (
+                      <span className="inline-flex items-center gap-1 text-red-500 font-medium">
+                        <XCircle className="w-4 h-4" /> Ditolak
+                      </span>
+                    )}
+                    </td>
                 </tr>
               ))
             ) : (

@@ -8,6 +8,7 @@ import SkeletonDashboard from "./SkeletonDashboard";
 import { UseGetPermintaanPenarikan } from "../../hook/useGetPermintaanPenarikan";
 
 function formatRupiahSingkat(angka) {
+  if (!angka || isNaN(angka)) return "0";
   if (angka >= 1_000_000) {
     return (angka / 1_000_000).toFixed(1).replace(/\.0$/, "") + "M";
   } else if (angka >= 1_000) {
@@ -43,7 +44,7 @@ const Content = () => {
    return tgl.getMonth() === bulanSekarang && tgl.getFullYear() === tahunSekarang
   });
 
-  const totalSaldoBulanIni = dataSaldoBulanIni?.reduce((acc, item) => acc + item.jumlahsaldo, 0);
+  const totalSaldoBulanIni = dataSaldoBulanIni?.reduce((acc, item) => acc + item.jumlahsaldo, 0) || 0;
 
 
   const dataPenarikanBulanIni = saldoKeluar?.filter((item) => {
@@ -61,11 +62,8 @@ const Content = () => {
    return tgl === now
    })
 
-  const totalPenarikanBulanIni = dataPenarikanBulanIni?.reduce((acc, item) => acc + item.jumlahsaldokeluar, 0);
+  const totalPenarikanBulanIni = dataPenarikanBulanIni?.reduce((acc, item) => acc + item.jumlahsaldokeluar, 0) || 0;
   const totalTransaksiBulanIni = dataPenarikanHariIni?.length + dataSaldoHariIni?.length;
-
-
-console.log(saldoKeluar)
 
    useEffect(() => {
      if (!saldoMasuk || !saldoKeluar) {
