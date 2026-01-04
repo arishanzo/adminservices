@@ -14,7 +14,7 @@ export const UseGetGuru = () => {
       try {
 
         setLoading(true);
-        const result = await getFetchCache( () => getGuru(), 5, 3000);
+        const result = await getFetchCache( () => getGuru(), 1, 0);
         if (isMounted) setGuru(result.data || null);
 
       } catch (error) {

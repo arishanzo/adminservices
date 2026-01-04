@@ -14,7 +14,7 @@ export const UseGetPermintaanPenarikan = () => {
       try {
 
         setLoading(true);
-        const result = await getFetchCache ( () => getTransaksi(), 5, 3000);
+        const result = await getFetchCache ( () => getTransaksi(), 1, 0);
         if (isMounted) setPermintaanPenarikan(result.data || null);
 
       } catch (error) {

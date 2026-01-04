@@ -14,7 +14,7 @@ export const UseGetSaldoKeluar = () => {
       try {
 
         setLoading(true);
-        const result = await getFetchCache( () => getSaldoKeluar(), 5, 3000);
+        const result = await getFetchCache( () => getSaldoKeluar(), 1, 0);
         if (isMounted) setSaldoKeluar(result.data || null);
 
       } catch (error) {

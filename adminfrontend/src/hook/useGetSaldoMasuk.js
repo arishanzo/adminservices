@@ -14,7 +14,7 @@ export const UseGetSaldoMasuk = () => {
       try {
 
         setLoading(true);
-        const result = await getFetchCache( () => getSaldoMasuk(), 5, 3000);
+        const result = await getFetchCache( () => getSaldoMasuk(), 1, 0);
         if (isMounted) setSaldoMasuk(result.data || null);
 
       } catch (error) {

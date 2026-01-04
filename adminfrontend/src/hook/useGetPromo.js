@@ -14,7 +14,7 @@ export const UseGetPromo = () => {
       try {
 
         setLoading(true);
-        const result = await getFetchCache ( () => getPromo(), 5, 3000);
+        const result = await getFetchCache ( () => getPromo(), 1, 0);
         if (isMounted) setPromo(result.data || null);
 
       } catch (error) {

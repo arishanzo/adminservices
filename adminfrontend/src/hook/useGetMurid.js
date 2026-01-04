@@ -14,7 +14,7 @@ export const UseGetMurid = () => {
       try {
 
         setLoading(true);
-        const result = await getFetchCache( () => getMurid(), 5, 3000);
+        const result = await getFetchCache( () => getMurid(), 1, 0);
         if (isMounted) setMurid(result.data || null);
 
       } catch (error) {
