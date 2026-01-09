@@ -74,7 +74,7 @@ const Sidebar = () => {
 
         
       <div className="p-4 border-t border-gray-200 space-y-2">
-         {/* Profile Link */}
+         {/* Profile Link
         <a
           href="/profil"
           className={`flex items-start space-x-3  py-2.5 rounded-lg transition-all duration-200 group ${
@@ -91,7 +91,7 @@ const Sidebar = () => {
                         </svg>
           </div>
           {!isCollapsed && <span className="font-medium">Pengaturan</span>}
-        </a>
+        </a> */}
       </div>
       </nav>
 
